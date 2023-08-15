@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './user.model';
+import { Users } from './user.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  private users: Users[] = [];
+  constructor(@InjectModel('Users') private readonly userModel: Model<Users>) {}
   async addUserInfo(email: string, password: string) {
-    const userId = Math.random().toString();
     const newUser = new this.userModel({
       email,
       password,
@@ -15,10 +15,17 @@ export class UserService {
     const result = await newUser.save();
     // return prodId;
     console.log(result);
-    return userId;
+    return result;
   }
-  // getProducts() {
-  //   return [...this.products];
+  async getUsers() {
+    const users = await this.userModel.find().exec();
+    console.log(users);
+    return users.map((user) => ({
+      email: user.email,
+      password: user.password,
+    }));
+  }
+
   // }
   // getSingleProduct(productId: string) {
   //   const product = this.findProduct(productId)[0];

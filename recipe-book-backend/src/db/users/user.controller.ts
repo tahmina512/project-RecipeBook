@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.services';
 
+
 @Controller('users')
 export class UserController {
-  //to add a new product
   constructor(private readonly userService: UserService) {}
   @Post()
   addUser(
@@ -20,5 +20,12 @@ export class UserController {
   ): any {
     const generatedId = this.userService.addUserInfo(email, password);
     return { id: generatedId };
+  }
+  @Get()
+  async getAllUsers() {
+    const users = await this.userService.getUsers();
+   
+    console.log(users);
+     return users;
   }
 }
