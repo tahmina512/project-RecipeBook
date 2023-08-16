@@ -1,4 +1,6 @@
 ShoppingList-RecipeBook/node_modules/
+ShoppingList-RecipeBook/.angular/cache/16.1.7/angular-webpack/
+ShoppingList-RecipeBook/.angular/cache/16.1.7/
 recipe-book-backend/node_modules/
 /dist
 /tmp

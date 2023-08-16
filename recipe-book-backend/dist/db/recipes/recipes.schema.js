@@ -30,7 +30,7 @@ __decorate([
     (0, mongoose_1.Prop)([
         {
             name: { type: String },
-            quantity: { type: Number },
+            amount: { type: Number },
         },
     ]),
     __metadata("design:type", Array)

@@ -15,7 +15,7 @@ export class Recipe extends Document {
   @Prop([
     {
       name: { type: String },
-      quantity: { type: Number },
+      amount: { type: Number },
     },
   ])
   ingredients: Ingredient[];

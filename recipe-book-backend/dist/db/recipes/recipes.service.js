@@ -21,26 +21,76 @@ let RecipeService = exports.RecipeService = class RecipeService {
         this.recipeModel = recipeModel;
     }
     async addRecipeInfo(name, description, imagePath, ingredients) {
-        console.log(name, description, imagePath);
-        const newRecipe = new this.recipeModel({
-            name,
-            imagePath,
-            description,
-            ingredients: ingredients,
+        const recipeExist = await this.recipeModel.findOne({
+            name: name,
         });
-        const result = await newRecipe.save();
-        console.log(result);
-        return newRecipe;
+        if (!recipeExist) {
+            const formattedIngredients = ingredients.map((ingredient) => ({
+                name: ingredient.name,
+                amount: ingredient.amount,
+            }));
+            const newRecipe = new this.recipeModel({
+                name,
+                imagePath,
+                description,
+                ingredients: formattedIngredients,
+            });
+            console.log('newRecipe', newRecipe);
+            const result = await newRecipe.save();
+        }
     }
     async getRecipe() {
         const recipes = await this.recipeModel.find().exec();
-        console.log(recipes);
         return recipes.map((recipe) => ({
             name: recipe.name,
             imagePath: recipe.imagePath,
             description: recipe.description,
             ingredients: recipe.ingredients,
         }));
+    }
+    async deleteRecipe(item) {
+        console.log('item', item);
+        const deletedRecipeItem = await this.recipeModel
+            .findOneAndDelete({
+            name: item.name,
+            imagePath: item.imagePath,
+            description: item.description,
+            ingredients: item.ingredients,
+        })
+            .exec();
+    }
+    catch(error) {
+        console.error('Error deleting recipe:', error);
+    }
+    async updateRecipe(prevRecipe, updatedRecipe) {
+        console.log('prev0', prevRecipe, updatedRecipe);
+        const findItem = await this.recipeModel
+            .findOne({
+            name: prevRecipe.name,
+        })
+            .exec();
+        console.log('findItem', findItem.ingredients);
+        if (findItem) {
+            console.log('objfsdfdsfdfect', findItem);
+            if (findItem.name) {
+                findItem.name = updatedRecipe.name;
+            }
+            if (findItem.name) {
+                findItem.name = updatedRecipe.name;
+            }
+            if (findItem.imagePath) {
+                findItem.imagePath = updatedRecipe.imagePath;
+            }
+            if (findItem.description) {
+                findItem.description = updatedRecipe.description;
+            }
+            if (findItem.ingredients) {
+                findItem.ingredients = updatedRecipe.ingredients;
+            }
+        }
+        console.log('newFInd', findItem);
+        const updatedItem = await findItem.save();
+        return updatedItem;
     }
 };
 exports.RecipeService = RecipeService = __decorate([

@@ -15,46 +15,40 @@ export class RecipeService {
     @InjectModel('Recipe') private readonly recipeModel: Model<Recipe>,
   ) {}
 
-  // async addRecipeInfo(
-  //   name: string,
-  //   desc: string,
-  //   imagePath: string,
-  //   ingredients: Ingredient[],
-  // ) {
-  //   // const userId = Math.random().toString();
-  //   const newRecipe = new this.recipeModel({
-  //     name,
-  //     desc,
-  //     imagePath,
-  //     ingredients: ingredients,
-  //   });
-  //   const result = await newRecipe.save();
-  //   // return prodId;
-  //   console.log(result);
-  //   return newRecipe;
-  // }
   async addRecipeInfo(
     name: string,
     description: string,
     imagePath: string,
     ingredients: Ingredient[],
   ) {
-    console.log(name, description, imagePath);
+    // console.log('name', description, imagePath, ingredients);
     // const userId = Math.random().toString();
-    const newRecipe = new this.recipeModel({
-      name,
-      imagePath,
-      description,
-      ingredients: ingredients,
+    const recipeExist = await this.recipeModel.findOne({
+      name: name,
     });
-    const result = await newRecipe.save();
-    // return prodId;
-    console.log(result);
-    return newRecipe;
+    // console.log('object', recipeExist);
+    if (!recipeExist) {
+      // const formattedIngredients = ingredients.map((ingredient) => ({
+      //   name: ingredient.name,
+      //   amount: ingredient.amount,
+      // }));
+      const newRecipe = new this.recipeModel({
+        name,
+        imagePath,
+        description,
+        // ingredients: formattedIngredients,
+        ingredients: ingredients,
+      });
+      console.log('newRecipe', newRecipe);
+      const result = await newRecipe.save();
+      // return prodId;
+      // console.log(result);
+      // return newRecipe;
+    }
   }
   async getRecipe() {
     const recipes = await this.recipeModel.find().exec();
-    console.log(recipes);
+    // console.log(recipes);
     return recipes.map((recipe) => ({
       name: recipe.name,
       imagePath: recipe.imagePath,
@@ -121,11 +115,51 @@ export class RecipeService {
   //   await recipeExist.save();
   // }
 
-  // async deleteRecipe(id: string) {
-  //   const deletedRecipe = await this.recipeModel.findByIdAndDelete(id).exec();
+  async deleteRecipe(item: Recipe) {
+    console.log('item', item);
+    const deletedRecipeItem = await this.recipeModel
+      .findOneAndDelete({
+        name: item.name,
+        imagePath: item.imagePath,
+        description: item.description,
+        ingredients: item.ingredients,
+      })
+      .exec();
+    // Handle successful deletion here
+  }
+  catch(error) {
+    console.error('Error deleting recipe:', error);
+    // Handle the error (log, respond, etc.)
+  }
 
-  //   if (!deletedRecipe) {
-  //     throw new NotFoundException(`Recipe with ID ${id} not found`);
-  //   }
-  // }
+  async updateRecipe(prevRecipe: Recipe, updatedRecipe: Recipe) {
+    console.log('prev0', prevRecipe, updatedRecipe);
+    const findItem = await this.recipeModel
+      .findOne({
+        name: prevRecipe.name,
+      })
+      .exec();
+    console.log('findItem', findItem.ingredients);
+    if (findItem) {
+      console.log('objfsdfdsfdfect', findItem);
+      if (findItem.name) {
+        findItem.name = updatedRecipe.name;
+      }
+      if (findItem.name) {
+        findItem.name = updatedRecipe.name;
+      }
+      if (findItem.imagePath) {
+        findItem.imagePath = updatedRecipe.imagePath;
+      }
+      if (findItem.description) {
+        findItem.description = updatedRecipe.description;
+      }
+      if (findItem.ingredients) {
+        findItem.ingredients = updatedRecipe.ingredients;
+      }
+    }
+    console.log('newFInd', findItem);
+    const updatedItem = await findItem.save();
+    return updatedItem;
+  }
 }

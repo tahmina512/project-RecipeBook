@@ -19,21 +19,33 @@ let RecipeController = exports.RecipeController = class RecipeController {
     constructor(recipeService) {
         this.recipeService = recipeService;
     }
-    addRecipe(recipes) {
-        console.log(recipes.length);
+    async addRecipe(recipes) {
         for (let i = 0; i < recipes.length; i++) {
-            console.log('Hello1sasas', recipes[i].name);
             const name = recipes[i].name;
             const imagePath = recipes[i].imagePath;
             const desc = recipes[i].description;
             const ingredients = recipes[i].ingredients;
-            const generatedRecipe = this.recipeService.addRecipeInfo(name, desc, imagePath, ingredients);
+            console.log('ingredientsController', ingredients);
+            const generatedRecipe = await this.recipeService.addRecipeInfo(name, desc, imagePath, ingredients);
         }
     }
     async getAllRecipes() {
         const recipes = await this.recipeService.getRecipe();
-        console.log(recipes);
         return recipes;
+    }
+    async deleteRecipeItem(item) {
+        const name = item.name;
+        console.log(name);
+        console.log('object', item);
+        this.recipeService.deleteRecipe(item);
+    }
+    async updateRecipeItem(updateData) {
+        console.log('hi');
+        const prevItem = updateData.prevItem;
+        const editedItem = updateData.editedItem;
+        console.log('obj1', prevItem);
+        console.log('obj2', editedItem);
+        await this.recipeService.updateRecipe(prevItem, editedItem);
     }
 };
 __decorate([
@@ -41,7 +53,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], RecipeController.prototype, "addRecipe", null);
 __decorate([
     (0, common_1.Get)(),
@@ -49,6 +61,20 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], RecipeController.prototype, "getAllRecipes", null);
+__decorate([
+    (0, common_1.Delete)(':delete'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RecipeController.prototype, "deleteRecipeItem", null);
+__decorate([
+    (0, common_1.Put)(':update'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RecipeController.prototype, "updateRecipeItem", null);
 exports.RecipeController = RecipeController = __decorate([
     (0, common_1.Controller)('recipes'),
     __metadata("design:paramtypes", [recipes_service_1.RecipeService])
