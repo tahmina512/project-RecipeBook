@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 // to inject one service to another use onjectable decorator
+let item;
 @Injectable()
 export class RecipeService {
   //manage our recipes
@@ -32,7 +34,10 @@ export class RecipeService {
   //   ),
   // ];
   private recipes: Recipe[] = [];
-  constructor(private slService: ShoppingListService) {}
+  constructor(
+    private slService: ShoppingListService,
+    private http: HttpClient
+  ) {}
   setRecipes(recipes: Recipe[]) {
     this.recipes = recipes;
     this.recipesChanged.next(this.recipes.slice());
@@ -45,18 +50,63 @@ export class RecipeService {
   }
 
   addIngredientsToSHoppingList(ingredients: Ingredient[]) {
-    this.slService.addIngredients(ingredients);
+    // this.slService.addIngredients(ingredients);
+    for (const ingredient of ingredients) {
+      const existingIngredientIndex = this.slService
+        .getIngredients()
+        .findIndex(
+          (ingred) =>
+            ingred.name.toLowerCase() === ingredient.name.toLowerCase()
+        );
+
+      if (existingIngredientIndex !== -1) {
+        // If ingredient with the same name exists, update its amount
+        this.slService.updateIngredient(existingIngredientIndex, {
+          ...ingredient,
+          amount:
+            ingredient.amount +
+            this.slService.getIngredient(existingIngredientIndex).amount,
+        });
+      } else {
+        // If ingredient doesn't exist, add it to the shopping list
+        this.slService.addIngredient(ingredient);
+      }
+    }
   }
   addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipesChanged.next(this.recipes.slice());
   }
   updateRecipe(index: number, newRecipe: Recipe) {
+    const prevItem = this.recipes[index];
     this.recipes[index] = newRecipe;
+    // Your first object data
+    const editedItem = newRecipe;
     this.recipesChanged.next(this.recipes.slice());
+    const updateData = {
+      prevItem,
+      editedItem,
+    };
+
+    console.log(updateData);
+    this.http
+      .put('http://localhost:3000/recipes/update', updateData)
+      .subscribe((response) => {
+        console.log(response); // Handle the response from the backend
+      });
+    //console.log(newRecipe);
   }
   deleteRecipe(index: number) {
+    item = this.recipes[index];
+    console.log(item);
+    // Remove the recipe from the frontend array
     this.recipes.splice(index, 1);
     this.recipesChanged.next(this.recipes.slice());
+    // console.log('item', item);
+    this.http
+      .delete('http://localhost:3000/recipes/delete', { body: item })
+      .subscribe((response) => {
+        console.log(response);
+      });
   }
 }

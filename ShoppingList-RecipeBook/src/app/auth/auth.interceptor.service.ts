@@ -6,12 +6,11 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
-
-import { AuthService } from './auth.service';
+import { AuthNewService } from './authNew.service';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthNewService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return this.authService.user.pipe(
@@ -21,7 +20,7 @@ export class AuthInterceptorService implements HttpInterceptor {
           return next.handle(req);
         }
         const modifiedReq = req.clone({
-          params: new HttpParams().set('auth', user.token),
+          params: new HttpParams().set('auth', user.email),
         });
         return next.handle(modifiedReq);
       })
