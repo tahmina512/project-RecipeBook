@@ -5,6 +5,7 @@
 
 # Node
 /node_modules
+.angular/
 npm-debug.log
 yarn-error.log
 
@@ -24,7 +25,7 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
-
+node_modules
 # Miscellaneous
 /.angular/cache
 .sass-cache/
