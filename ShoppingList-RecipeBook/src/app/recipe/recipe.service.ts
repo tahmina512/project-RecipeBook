@@ -50,7 +50,28 @@ export class RecipeService {
   }
 
   addIngredientsToSHoppingList(ingredients: Ingredient[]) {
-    this.slService.addIngredients(ingredients);
+    // this.slService.addIngredients(ingredients);
+    for (const ingredient of ingredients) {
+      const existingIngredientIndex = this.slService
+        .getIngredients()
+        .findIndex(
+          (ingred) =>
+            ingred.name.toLowerCase() === ingredient.name.toLowerCase()
+        );
+
+      if (existingIngredientIndex !== -1) {
+        // If ingredient with the same name exists, update its amount
+        this.slService.updateIngredient(existingIngredientIndex, {
+          ...ingredient,
+          amount:
+            ingredient.amount +
+            this.slService.getIngredient(existingIngredientIndex).amount,
+        });
+      } else {
+        // If ingredient doesn't exist, add it to the shopping list
+        this.slService.addIngredient(ingredient);
+      }
+    }
   }
   addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);

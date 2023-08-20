@@ -21,14 +21,15 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
-export declare class Users {
+import { Document } from 'mongoose';
+export declare class Users extends Document {
     email: string;
     password: string;
+    comparePassword(attempt: string): Promise<boolean>;
 }
-export declare const UserSchema: import("mongoose").Schema<Users, import("mongoose").Model<Users, any, any, any, import("mongoose").Document<unknown, any, Users> & Users & {
+export declare const UserSchema: import("mongoose").Schema<Users, import("mongoose").Model<Users, any, any, any, Document<unknown, any, Users> & Users & {
     _id: import("mongoose").Types.ObjectId;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Users, import("mongoose").Document<unknown, {}, Users> & Users & {
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Users, Document<unknown, {}, Users> & Users & {
     _id: import("mongoose").Types.ObjectId;
 }>;

@@ -18,9 +18,9 @@ let AppModule = exports.AppModule = class AppModule {
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            mongoose_1.MongooseModule.forRoot('mongodb+srv://tahminatisha:RZOcFHIo64O8qgUp@cluster0.ma5jfjc.mongodb.net/recipeBook'),
             user_module_1.UserModule,
             recipes_module_1.RecipeModule,
-            mongoose_1.MongooseModule.forRoot('mongodb+srv://tahminatisha:RZOcFHIo64O8qgUp@cluster0.ma5jfjc.mongodb.net/recipeBook'),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

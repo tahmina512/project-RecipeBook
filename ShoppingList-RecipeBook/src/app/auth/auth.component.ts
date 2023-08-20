@@ -7,10 +7,9 @@ import {
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-
-import { AuthService, AuthResponseData } from './auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
+import { AuthResponse, AuthNewService } from './authNew.service';
 
 @Component({
   selector: 'app-auth',
@@ -26,7 +25,7 @@ export class AuthComponent implements OnDestroy {
   private closeSub: Subscription;
 
   constructor(
-    private authService: AuthService,
+    private authService: AuthNewService,
     private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver
   ) {}
@@ -42,7 +41,7 @@ export class AuthComponent implements OnDestroy {
     const email = form.value.email;
     const password = form.value.password;
 
-    let authObs: Observable<AuthResponseData>;
+    let authObs: Observable<AuthResponse>;
 
     this.isLoading = true;
 

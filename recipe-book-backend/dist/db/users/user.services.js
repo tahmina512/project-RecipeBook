@@ -19,24 +19,31 @@ const mongoose_2 = require("mongoose");
 let UserService = exports.UserService = class UserService {
     constructor(userModel) {
         this.userModel = userModel;
-        this.users = [];
+        console.log('userservice');
     }
-    async addUserInfo(email, password) {
-        const newUser = new this.userModel({
-            email,
-            password,
-        });
-        const result = await newUser.save();
-        console.log(result);
-        return result;
+    async createUser(email, password) {
+        const userExists = await this.userModel
+            .findOne({
+            email: email,
+        })
+            .exec();
+        if (!userExists) {
+            console.log('dsdsds');
+            const newUser = new this.userModel({
+                email,
+                password,
+            });
+            const result = await newUser.save();
+            return result;
+        }
+        else {
+            console.log('User already exists');
+            return null;
+        }
     }
-    async getUsers() {
-        const users = await this.userModel.find().exec();
-        console.log(users);
-        return users.map((user) => ({
-            email: user.email,
-            password: user.password,
-        }));
+    async findbyEmail(email) {
+        console.log("userservice", email);
+        return this.userModel.findOne({ email });
     }
 };
 exports.UserService = UserService = __decorate([

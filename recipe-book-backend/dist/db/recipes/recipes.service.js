@@ -25,15 +25,11 @@ let RecipeService = exports.RecipeService = class RecipeService {
             name: name,
         });
         if (!recipeExist) {
-            const formattedIngredients = ingredients.map((ingredient) => ({
-                name: ingredient.name,
-                amount: ingredient.amount,
-            }));
             const newRecipe = new this.recipeModel({
                 name,
                 imagePath,
                 description,
-                ingredients: formattedIngredients,
+                ingredients: ingredients,
             });
             console.log('newRecipe', newRecipe);
             const result = await newRecipe.save();

@@ -9,16 +9,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
+const user_schema_1 = require("./user.schema");
 const user_controller_1 = require("./user.controller");
 const user_services_1 = require("./user.services");
-const user_schema_1 = require("./user.schema");
+const passport_1 = require("@nestjs/passport");
+const auth_service_1 = require("./auth.service");
+const local_strategy_1 = require("../auth/local-strategy");
 let UserModule = exports.UserModule = class UserModule {
 };
 exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
-        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Users', schema: user_schema_1.UserSchema }])],
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: 'Users', schema: user_schema_1.UserSchema }]),
+            passport_1.PassportModule,
+        ],
         controllers: [user_controller_1.UserController],
-        providers: [user_services_1.UserService],
+        providers: [user_services_1.UserService, auth_service_1.AuthService, local_strategy_1.LocalStrategy],
+        exports: [user_services_1.UserService],
     })
 ], UserModule);
 //# sourceMappingURL=user.module.js.map

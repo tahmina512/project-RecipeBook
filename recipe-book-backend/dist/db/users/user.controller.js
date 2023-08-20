@@ -15,36 +15,48 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_services_1 = require("./user.services");
+const auth_service_1 = require("./auth.service");
+const local_strategy_1 = require("../auth/local-strategy");
 let UserController = exports.UserController = class UserController {
-    constructor(userService) {
+    constructor(userService, authService, localStrategy) {
         this.userService = userService;
+        this.authService = authService;
+        this.localStrategy = localStrategy;
     }
-    addUser(email, password) {
-        const generatedId = this.userService.addUserInfo(email, password);
-        return { id: generatedId };
+    async addUser(email, password) {
+        const userInfo = await this.userService.createUser(email, password);
+        return userInfo;
     }
-    async getAllUsers() {
-        const users = await this.userService.getUsers();
-        console.log(users);
-        return users;
+    async login(email, password) {
+        console.log('body', email, password);
+        try {
+            return await this.localStrategy.validate(email, password);
+        }
+        catch (error) {
+            throw new common_1.HttpException({ message: 'Wrong_Password_or_Username' }, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('signup'),
     __param(0, (0, common_1.Body)('email')),
     __param(1, (0, common_1.Body)('password')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "addUser", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('password')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "getAllUsers", null);
+], UserController.prototype, "login", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [user_services_1.UserService])
+    __metadata("design:paramtypes", [user_services_1.UserService,
+        auth_service_1.AuthService,
+        local_strategy_1.LocalStrategy])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

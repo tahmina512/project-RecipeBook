@@ -26,13 +26,11 @@ import { Model } from 'mongoose';
 import { Users } from './user.schema';
 export declare class UserService {
     private readonly userModel;
-    private users;
     constructor(userModel: Model<Users>);
-    addUserInfo(email: string, password: string): Promise<import("mongoose").Document<unknown, {}, Users> & Users & {
+    createUser(email: string, password: string): Promise<import("mongoose").Document<unknown, {}, Users> & Users & {
         _id: import("mongoose").Types.ObjectId;
     }>;
-    getUsers(): Promise<{
-        email: string;
-        password: string;
-    }[]>;
+    findbyEmail(email: string): Promise<import("mongoose").Document<unknown, {}, Users> & Users & {
+        _id: import("mongoose").Types.ObjectId;
+    }>;
 }

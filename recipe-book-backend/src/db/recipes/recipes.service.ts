@@ -21,17 +21,13 @@ export class RecipeService {
     imagePath: string,
     ingredients: Ingredient[],
   ) {
-    // console.log('name', description, imagePath, ingredients);
-    // const userId = Math.random().toString();
+ 
     const recipeExist = await this.recipeModel.findOne({
       name: name,
     });
-    // console.log('object', recipeExist);
+   
     if (!recipeExist) {
-      // const formattedIngredients = ingredients.map((ingredient) => ({
-      //   name: ingredient.name,
-      //   amount: ingredient.amount,
-      // }));
+     
       const newRecipe = new this.recipeModel({
         name,
         imagePath,
@@ -41,9 +37,7 @@ export class RecipeService {
       });
       console.log('newRecipe', newRecipe);
       const result = await newRecipe.save();
-      // return prodId;
-      // console.log(result);
-      // return newRecipe;
+     
     }
   }
   async getRecipe() {
@@ -56,64 +50,6 @@ export class RecipeService {
       ingredients: recipe.ingredients,
     }));
   }
-  // async getSingleRecipe(recipeId:string): Promise<Recipe> {
-  //   try {
-  //     const objectId = new mongoose.Types.ObjectId(recipeId); // Convert to ObjectId
-  //     console.log(objectId);
-  //     const existingRecipe = await this.recipeModel.findById(objectId).exec();
-
-  //     if (!existingRecipe) {
-  //       throw new NotFoundException(`Recipe with ID ${recipeId} not found`);
-  //     }
-
-  //     return existingRecipe;
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(
-  //       'An error occurred while fetching the recipe',
-  //     );
-  //   }
-  // }
-  // async getRecipeById(id: string) {
-  //   console.log('sdsdsd');
-  //   const SingleRecipe = await this.recipeModel.findById(id).exec();
-  //   // console.log(SingleRecipe.name);
-  //   if (!SingleRecipe) {
-  //     // console.log('object');
-  //     throw new NotFoundException(`Recipe with ID ${id} not found`);
-  //   }
-
-  //   return SingleRecipe;
-  // }
-
-  // async updateRecipe(
-  //   id: string,
-  //   name: string,
-  //   desc: string,
-  //   imagePath: string,
-  //   ingredients: Ingredient[],
-  // ) {
-  //   const recipeExist = await this.recipeModel.findById(id).exec();
-
-  //   if (!recipeExist) {
-  //     throw new NotFoundException(`Recipe with ID ${id} not found`);
-  //   } else {
-  //     if (name) {
-  //       recipeExist.name = name;
-  //     }
-  //      if (imagePath) {
-  //        recipeExist.imagePath = imagePath;
-  //      }
-  //     if (desc) {
-  //       recipeExist.desc = desc;
-  //     }
-
-  //     if (ingredients) {
-  //       recipeExist.ingredients = ingredients;
-  //     }
-  //   }
-
-  //   await recipeExist.save();
-  // }
 
   async deleteRecipe(item: Recipe) {
     console.log('item', item);
@@ -125,11 +61,11 @@ export class RecipeService {
         ingredients: item.ingredients,
       })
       .exec();
-    // Handle successful deletion here
+   
   }
   catch(error) {
     console.error('Error deleting recipe:', error);
-    // Handle the error (log, respond, etc.)
+    
   }
 
   async updateRecipe(prevRecipe: Recipe, updatedRecipe: Recipe) {
