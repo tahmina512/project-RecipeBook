@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Users } from './user.schema';
@@ -23,15 +28,19 @@ export class UserService {
         password,
       });
       const result = await newUser.save();
-      // console.log(result);
+      console.log(result);
       return result;
     } else {
-      console.log('User already exists'); // Log the message
-      return null;
+      throw new HttpException(
+        { message: 'Email_Exists' },
+        HttpStatus.NOT_FOUND,
+      );
+      // console.log('User already exists'); // Log the message
+      // return null;
     }
   }
   async findbyEmail(email: string) {
-    console.log("userservice",email);
+    console.log('userservice', email);
     return this.userModel.findOne({ email });
   }
 }

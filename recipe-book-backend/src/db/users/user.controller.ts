@@ -27,8 +27,15 @@ export class UserController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    const userInfo = await this.userService.createUser(email, password);
-    return userInfo;
+    try {
+      const userInfo = await this.userService.createUser(email, password);
+      return userInfo;
+    } catch (error) {
+      throw new HttpException(
+        { message: 'Email_Exists' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
   // @UseGuards(AuthGuard('local'))
   @Post('login')

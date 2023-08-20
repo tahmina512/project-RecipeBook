@@ -34,15 +34,15 @@ let UserService = exports.UserService = class UserService {
                 password,
             });
             const result = await newUser.save();
+            console.log(result);
             return result;
         }
         else {
-            console.log('User already exists');
-            return null;
+            throw new common_1.HttpException({ message: 'Email_Exists' }, common_1.HttpStatus.NOT_FOUND);
         }
     }
     async findbyEmail(email) {
-        console.log("userservice", email);
+        console.log('userservice', email);
         return this.userModel.findOne({ email });
     }
 };
