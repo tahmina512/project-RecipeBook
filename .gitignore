@@ -17,6 +17,7 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+ ShoppingList-RecipeBook/.angular/cache/
 
 # Visual Studio Code
 .vscode/*
